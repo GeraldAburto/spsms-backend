@@ -1,16 +1,20 @@
 import { Module } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
 
 import RegisterUserUseCase from '@/core/users/use-cases/register-user.use-case';
-import { InMemoryUsersService } from './in-memory-users.service';
+
+import { UserModel } from './models/user.model';
 import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
+  imports: [SequelizeModule.forFeature([UserModel])],
   providers: [
-    InMemoryUsersService,
+    UsersService,
     {
-      inject: [InMemoryUsersService],
+      inject: [UsersService],
       provide: RegisterUserUseCase,
-      useFactory: (userService: InMemoryUsersService) => {
+      useFactory: (userService: UsersService) => {
         return new RegisterUserUseCase(userService);
       },
     },

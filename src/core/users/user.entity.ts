@@ -22,4 +22,16 @@ export default class User {
   public get email() {
     return this._email;
   }
+
+  public get firstName() {
+    return this._firstName;
+  }
+
+  public get lastName() {
+    return this._lastName;
+  }
+
+  public get password() {
+    return this._password;
+  }
 }
