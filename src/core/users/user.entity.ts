@@ -1,16 +1,18 @@
+import UserHashedPassword from './value-objects/user-hashed-password.value-object';
+
 export default class User {
   private readonly _email: string;
   private readonly _firstName: string;
   private readonly _id: string;
   private readonly _lastName: string;
-  private readonly _password: string;
+  private readonly _password: UserHashedPassword;
 
   constructor(
     email: string,
     firstName: string,
     id: string,
     lastName: string,
-    password: string,
+    password: UserHashedPassword,
   ) {
     this._email = email;
     this._firstName = firstName;
@@ -32,6 +34,10 @@ export default class User {
   }
 
   public get password() {
-    return this._password;
+    return this._password.value;
+  }
+
+  public get id() {
+    return this._id;
   }
 }

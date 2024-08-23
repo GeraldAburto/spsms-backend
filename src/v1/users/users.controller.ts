@@ -7,7 +7,9 @@ import {
 } from '@nestjs/common';
 
 import UserAlreadyExistsException from '@/core/users/exceptions/user-already-exists.exception';
+import UserInvalidPasswordException from '@/core/users/exceptions/user-invalid-password.exception';
 import RegisterUserUseCase from '@/core/users/use-cases/register-user.use-case';
+
 import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller({
@@ -27,11 +29,14 @@ export class UsersController {
         password: createUserDto.password,
       });
     } catch (error) {
-      if (error instanceof UserAlreadyExistsException) {
+      if (
+        error instanceof UserAlreadyExistsException ||
+        error instanceof UserInvalidPasswordException
+      ) {
         throw new BadRequestException(error.message);
       }
 
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(error.message);
     }
   }
 }
