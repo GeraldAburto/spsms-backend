@@ -1,5 +1,5 @@
 import { IPasswordHasher } from '../../shared/password-hasher.service';
-import UserInvalidArgumentException from '../exceptions/user-invalid-argument.exception';
+import UserInvalidPasswordException from '../exceptions/user-invalid-password.exception';
 import UserHashedPassword from './user-hashed-password.value-object';
 
 export default class UserPlainPassword {
@@ -7,25 +7,25 @@ export default class UserPlainPassword {
 
   constructor(password: string) {
     if (password.length < 8) {
-      throw new UserInvalidArgumentException(
+      throw new UserInvalidPasswordException(
         'Password must be at least 8 characters long.',
       );
     }
 
     if (!/[A-Z]/.test(password)) {
-      throw new UserInvalidArgumentException(
+      throw new UserInvalidPasswordException(
         'Password must contain at least one uppercase letter.',
       );
     }
 
     if (!/\d/.test(password)) {
-      throw new UserInvalidArgumentException(
+      throw new UserInvalidPasswordException(
         'Password must contain at least one digit.',
       );
     }
 
     if (!/[!@#$%^&*()_+{}\[\]:;<>,.?~\-]/.test(password)) {
-      throw new UserInvalidArgumentException(
+      throw new UserInvalidPasswordException(
         'Password must contain at least one special character.',
       );
     }
