@@ -8,7 +8,7 @@ import {
 
 type UserModelCreationAttributes = Pick<
   UserModel,
-  'email' | 'firstName' | 'lastName' | 'passwordHash'
+  'id' | 'email' | 'firstName' | 'lastName' | 'passwordHash'
 >;
 
 @Table({

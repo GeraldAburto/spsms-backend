@@ -4,6 +4,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import RegisterUserUseCase from '@/core/users/use-cases/register-user.use-case';
 
 import { BcryptPasswordHasherService } from '../shared/bcrypt-password-hasher.service';
+import { UUIDGeneratorService } from '../shared/uuid-generator.service';
 import { UserModel } from './models/user.model';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -13,14 +14,20 @@ import { UsersService } from './users.service';
   providers: [
     UsersService,
     BcryptPasswordHasherService,
+    UUIDGeneratorService,
     {
-      inject: [UsersService, BcryptPasswordHasherService],
+      inject: [UsersService, BcryptPasswordHasherService, UUIDGeneratorService],
       provide: RegisterUserUseCase,
       useFactory: (
         userService: UsersService,
         passwordHasherService: BcryptPasswordHasherService,
+        uuidGeneratorService: UUIDGeneratorService,
       ) => {
-        return new RegisterUserUseCase(userService, passwordHasherService);
+        return new RegisterUserUseCase(
+          userService,
+          passwordHasherService,
+          uuidGeneratorService,
+        );
       },
     },
   ],

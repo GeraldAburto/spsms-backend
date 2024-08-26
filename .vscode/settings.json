@@ -1,8 +1,10 @@
 {
     "cSpell.words": [
         "Hasher",
+        "IUUID",
         "nestjs",
-        "spsms"
+        "spsms",
+        "uuidv4"
     ],
     "editor.formatOnSave": false
 }
