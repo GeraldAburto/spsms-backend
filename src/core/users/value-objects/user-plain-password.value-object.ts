@@ -1,44 +1,35 @@
 import { IPasswordHasher } from '../../shared/password-hasher.service';
-import UserInvalidPasswordException from '../exceptions/user-invalid-password.exception';
+import ValueObject from '../../shared/value-objects/value-object.abstract';
+import UserPasswordException from '../exceptions/user-password.exception';
 import UserHashedPassword from './user-hashed-password.value-object';
 
-export default class UserPlainPassword {
-  private readonly _value: string;
+export default class UserPlainPassword extends ValueObject<string> {
+  private constructor(readonly value: string) {
+    super(value, 'Password');
 
-  constructor(password: string) {
-    if (password.length < 8) {
-      throw new UserInvalidPasswordException(
-        'Password must be at least 8 characters long.',
-      );
+    if (value.length < 8) {
+      throw UserPasswordException.mustBeAtLeastEightCharactersLong();
     }
 
-    if (!/[A-Z]/.test(password)) {
-      throw new UserInvalidPasswordException(
-        'Password must contain at least one uppercase letter.',
-      );
+    if (!/[A-Z]/.test(value)) {
+      throw UserPasswordException.mustContainUppercaseLetter();
     }
 
-    if (!/\d/.test(password)) {
-      throw new UserInvalidPasswordException(
-        'Password must contain at least one digit.',
-      );
+    if (!/\d/.test(value)) {
+      throw UserPasswordException.mustContainDigit();
     }
 
-    if (!/[!@#$%^&*()_+{}\[\]:;<>,.?~\-]/.test(password)) {
-      throw new UserInvalidPasswordException(
-        'Password must contain at least one special character.',
-      );
+    if (!/[!@#$%^&*()_+{}\[\]:;<>,.?~\-]/.test(value)) {
+      throw UserPasswordException.mustContainSpecialCharacter();
     }
-
-    this._value = password;
   }
 
-  get value() {
-    return this._value;
+  public static fromString(password: string) {
+    return new this(password);
   }
 
   hash(hasher: IPasswordHasher): UserHashedPassword {
-    const hashedValue = hasher.hash(this._value);
-    return new UserHashedPassword(hashedValue);
+    const hashedValue = hasher.hash(this.value);
+    return UserHashedPassword.fromString(hashedValue);
   }
 }

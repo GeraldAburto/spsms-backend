@@ -5,7 +5,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import sequelizeConfig from '@/config/sequelize.config';
 import { validate } from '@/env.validation';
 import { BcryptPasswordHasherService } from '@/v1/shared/bcrypt-password-hasher.service';
-import { UserModel } from '@/v1/users/models/user.model';
+import { UUIDGeneratorService } from '@/v1/shared/uuid-generator.service';
 import { UsersModule } from '@/v1/users/users.module';
 
 @Module({
@@ -13,9 +13,9 @@ import { UsersModule } from '@/v1/users/users.module';
     ConfigModule.forRoot({
       validate,
     }),
-    SequelizeModule.forRoot({ ...sequelizeConfig(), models: [UserModel] }),
+    SequelizeModule.forRoot(sequelizeConfig()),
     UsersModule,
   ],
-  providers: [BcryptPasswordHasherService],
+  providers: [BcryptPasswordHasherService, UUIDGeneratorService],
 })
 export class AppModule {}

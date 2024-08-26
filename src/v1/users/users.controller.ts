@@ -6,8 +6,13 @@ import {
   Post,
 } from '@nestjs/common';
 
+import InvalidArgumentException from '@/core/shared/exceptions/invalid-argument.exception';
 import UserAlreadyExistsException from '@/core/users/exceptions/user-already-exists.exception';
-import UserInvalidPasswordException from '@/core/users/exceptions/user-invalid-password.exception';
+import UserEmailException from '@/core/users/exceptions/user-email.exception';
+import UserFirstNamedException from '@/core/users/exceptions/user-first-name.exception';
+import UserIdException from '@/core/users/exceptions/user-id.exception';
+import UserLastNamedException from '@/core/users/exceptions/user-last-name.exception';
+import UserPasswordException from '@/core/users/exceptions/user-password.exception';
 import RegisterUserUseCase from '@/core/users/use-cases/register-user.use-case';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -30,8 +35,13 @@ export class UsersController {
       });
     } catch (error) {
       if (
+        error instanceof InvalidArgumentException ||
         error instanceof UserAlreadyExistsException ||
-        error instanceof UserInvalidPasswordException
+        error instanceof UserEmailException ||
+        error instanceof UserFirstNamedException ||
+        error instanceof UserIdException ||
+        error instanceof UserLastNamedException ||
+        error instanceof UserPasswordException
       ) {
         throw new BadRequestException(error.message);
       }
