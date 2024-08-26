@@ -13,7 +13,7 @@ import { UsersModule } from '@/v1/users/users.module';
     ConfigModule.forRoot({
       validate,
     }),
-    SequelizeModule.forRoot({ ...sequelizeConfig(), models: [UserModel] }),
+    SequelizeModule.forRoot(sequelizeConfig()),
     UsersModule,
   ],
   providers: [BcryptPasswordHasherService],
