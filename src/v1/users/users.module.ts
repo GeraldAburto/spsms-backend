@@ -7,24 +7,28 @@ import { BcryptPasswordHasherService } from '../shared/bcrypt-password-hasher.se
 import { UUIDGeneratorService } from '../shared/uuid-generator.service';
 import { UserModel } from './models/user.model';
 import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { UsersRepository } from './users.repository';
 
 @Module({
   imports: [SequelizeModule.forFeature([UserModel])],
   providers: [
-    UsersService,
+    UsersRepository,
     BcryptPasswordHasherService,
     UUIDGeneratorService,
     {
-      inject: [UsersService, BcryptPasswordHasherService, UUIDGeneratorService],
+      inject: [
+        UsersRepository,
+        BcryptPasswordHasherService,
+        UUIDGeneratorService,
+      ],
       provide: RegisterUserUseCase,
       useFactory: (
-        userService: UsersService,
+        userRepository: UsersRepository,
         passwordHasherService: BcryptPasswordHasherService,
         uuidGeneratorService: UUIDGeneratorService,
       ) => {
         return new RegisterUserUseCase(
-          userService,
+          userRepository,
           passwordHasherService,
           uuidGeneratorService,
         );
