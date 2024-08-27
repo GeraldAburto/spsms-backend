@@ -5,6 +5,13 @@ import {
   InternalServerErrorException,
   Post,
 } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import InvalidArgumentException from '@/core/shared/exceptions/invalid-argument.exception';
 import UserAlreadyExistsException from '@/core/users/exceptions/user-already-exists.exception';
@@ -17,6 +24,7 @@ import RegisterUserUseCase from '@/core/users/use-cases/register-user.use-case';
 
 import { CreateUserDto } from './dto/create-user.dto';
 
+@ApiTags('Users')
 @Controller({
   path: 'users',
   version: '1',
@@ -24,6 +32,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UsersController {
   constructor(private readonly registerUserUseCase: RegisterUserUseCase) {}
 
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiCreatedResponse({ description: 'User created successfully' })
+  @ApiBadRequestResponse({
+    description: 'There is an error in the request payload',
+  })
+  @ApiInternalServerErrorResponse({ description: 'Something went wrong' })
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
