@@ -41,7 +41,7 @@ export default class User {
     return this._email.value;
   }
 
-  public get password(): string {
-    return this._password.value;
+  public get password(): UserHashedPassword {
+    return this._password;
   }
 }

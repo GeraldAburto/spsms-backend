@@ -3,12 +3,12 @@ import { InjectModel } from '@nestjs/sequelize';
 
 import User from '@/core/users/user.entity';
 import { IUserRepository } from '@/core/users/user.repository';
-import UserHashedPassword from '@/core/users/value-objects/user-hashed-password.value-object';
-
 import UserEmail from '@/core/users/value-objects/user-email.value-object';
 import UserFirstName from '@/core/users/value-objects/user-first-name.value-object';
+import UserHashedPassword from '@/core/users/value-objects/user-hashed-password.value-object';
 import UserId from '@/core/users/value-objects/user-id.value-object';
 import UserLastName from '@/core/users/value-objects/user-last-name.value-object';
+
 import { UserModel } from './models/user.model';
 
 @Injectable()
@@ -41,7 +41,7 @@ export class UsersRepository implements IUserRepository {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
-      passwordHash: user.password,
+      passwordHash: user.password.value,
     });
   }
 }

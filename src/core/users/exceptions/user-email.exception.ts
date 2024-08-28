@@ -3,10 +3,6 @@ export default class UserEmailException extends Error {
     super(message);
   }
 
-  public static alreadyExists() {
-    return new this('Email already exists.');
-  }
-
   public static mustNotBeEmpty() {
     return new this('Email must not be empty.');
   }
