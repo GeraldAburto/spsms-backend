@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  HttpCode,
   InternalServerErrorException,
   NotFoundException,
   Post,
@@ -9,10 +10,12 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
 import InvalidArgumentException from '@/core/shared/exceptions/invalid-argument.exception';
@@ -31,13 +34,16 @@ import { SignInUserDto } from './dto/sign-in-user.dto';
 export class AuthController {
   constructor(private readonly signInUserUseCase: SignInUserUseCase) {}
 
-  @ApiOperation({ summary: 'Register a new user' })
-  @ApiCreatedResponse({ description: 'User created successfully' })
+  @ApiOperation({ summary: 'Sign In' })
+  @ApiOkResponse({ description: 'Successfully signed in' })
   @ApiBadRequestResponse({
     description: 'There is an error in the request payload',
   })
   @ApiInternalServerErrorResponse({ description: 'Something went wrong' })
+  @ApiNotFoundResponse({ description: 'User not found' })
+  @ApiUnauthorizedResponse({ description: 'Wrong credentials' })
   @Post('/sign-in')
+  @HttpCode(200)
   async signIn(@Body() signInUserDto: SignInUserDto) {
     try {
       return await this.signInUserUseCase.execute({
