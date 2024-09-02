@@ -1,28 +1,26 @@
 import { Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
 
 import RegisterUserUseCase from '@/core/users/use-cases/register-user.use-case';
+import { DatabaseModule } from '@/database/database.module';
+import { UserRepository } from '@/database/user.repository';
 
 import { BcryptPasswordHasherService } from '../shared/bcrypt-password-hasher.service';
 import { SharedModule } from '../shared/shared.module';
 import { UUIDGeneratorService } from '../shared/uuid-generator.service';
-import { UserModel } from './models/user.model';
 import { UsersController } from './users.controller';
-import { UsersRepository } from './users.repository';
 
 @Module({
-  imports: [SequelizeModule.forFeature([UserModel]), SharedModule],
+  imports: [DatabaseModule, SharedModule],
   providers: [
-    UsersRepository,
     {
       inject: [
-        UsersRepository,
+        UserRepository,
         BcryptPasswordHasherService,
         UUIDGeneratorService,
       ],
       provide: RegisterUserUseCase,
       useFactory: (
-        userRepository: UsersRepository,
+        userRepository: UserRepository,
         passwordHasherService: BcryptPasswordHasherService,
         uuidGeneratorService: UUIDGeneratorService,
       ) => {
@@ -35,6 +33,5 @@ import { UsersRepository } from './users.repository';
     },
   ],
   controllers: [UsersController],
-  exports: [UsersRepository],
 })
 export class UsersModule {}

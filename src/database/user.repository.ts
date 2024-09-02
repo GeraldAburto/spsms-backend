@@ -12,7 +12,7 @@ import UserLastName from '@/core/users/value-objects/user-last-name.value-object
 import { UserModel } from './models/user.model';
 
 @Injectable()
-export class UsersRepository implements IUserRepository {
+export class UserRepository implements IUserRepository {
   constructor(
     @InjectModel(UserModel) private readonly userModel: typeof UserModel,
   ) {}

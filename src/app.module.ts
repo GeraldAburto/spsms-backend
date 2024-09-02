@@ -1,18 +1,20 @@
 import { Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
+import { ConfigModule } from '@nestjs/config';
 
-import sequelizeConfig from '@/config/sequelize.config';
+import { validate } from '@/config/env.validation';
+import { DatabaseModule } from '@/database/database.module';
 import { AuthModule } from '@/v1/auth/auth.module';
-import { BcryptPasswordHasherService } from '@/v1/shared/bcrypt-password-hasher.service';
-import { UUIDGeneratorService } from '@/v1/shared/uuid-generator.service';
 import { UsersModule } from '@/v1/users/users.module';
 
 @Module({
   imports: [
-    SequelizeModule.forRoot(sequelizeConfig()),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validate,
+    }),
+    DatabaseModule,
     UsersModule,
     AuthModule,
   ],
-  providers: [BcryptPasswordHasherService, UUIDGeneratorService],
 })
 export class AppModule {}
