@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  HttpStatus,
   InternalServerErrorException,
   NotFoundException,
   Post,
@@ -43,7 +44,7 @@ export class AuthController {
   @ApiNotFoundResponse({ description: 'User not found' })
   @ApiUnauthorizedResponse({ description: 'Wrong credentials' })
   @Post('/sign-in')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async signIn(@Body() signInUserDto: SignInUserDto) {
     try {
       return await this.signInUserUseCase.execute({
