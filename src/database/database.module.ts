@@ -4,7 +4,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
 
 import sequelizeConfig from './config/sequelize.config';
 import { validate } from './config/sequelize.validation';
+import { StreamingPlatformModel } from './models/streaming-platform.model';
 import { UserModel } from './models/user.model';
+import { StreamingPlatformRepository } from './streaming-platform.repository';
 import { UserRepository } from './user.repository';
 
 @Module({
@@ -14,9 +16,9 @@ import { UserRepository } from './user.repository';
       validate,
     }),
     SequelizeModule.forRoot(sequelizeConfig()),
-    SequelizeModule.forFeature([UserModel]),
+    SequelizeModule.forFeature([UserModel, StreamingPlatformModel]),
   ],
-  providers: [UserRepository],
-  exports: [UserRepository],
+  providers: [UserRepository, StreamingPlatformRepository],
+  exports: [UserRepository, StreamingPlatformRepository],
 })
 export class DatabaseModule {}

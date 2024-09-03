@@ -1,4 +1,4 @@
-export default class UserIdException extends Error {
+export default class StreamingPlatformIdException extends Error {
   private constructor(message: string) {
     super(message);
   }
@@ -8,6 +8,6 @@ export default class UserIdException extends Error {
   }
 
   public static mustBeValidUUID() {
-    return new this('Id must not be a valid UUID.');
+    return new this('Id must be a valid UUID.');
   }
 }
