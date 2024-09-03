@@ -44,4 +44,22 @@ export class UserRepository implements IUserRepository {
       passwordHash: user.password.value,
     });
   }
+
+  async findById(id: UserId): Promise<User | null> {
+    const user = await this.userModel.findOne({
+      where: {
+        id: id.value,
+      },
+    });
+
+    if (!user) return null;
+
+    return new User(
+      UserId.fromString(user.id),
+      UserFirstName.fromString(user.firstName),
+      UserLastName.fromString(user.lastName),
+      UserEmail.fromString(user.email),
+      UserHashedPassword.fromString(user.passwordHash),
+    );
+  }
 }

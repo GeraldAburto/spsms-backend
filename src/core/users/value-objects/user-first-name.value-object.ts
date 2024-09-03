@@ -14,7 +14,7 @@ export default class UserFirstName extends ValueObject<string> {
     }
   }
 
-  public static fromString(id: string) {
-    return new this(id);
+  public static fromString(firstName: string) {
+    return new this(firstName);
   }
 }

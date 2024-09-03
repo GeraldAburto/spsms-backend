@@ -12,5 +12,6 @@ export default registerAs(
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     autoLoadModels: true,
+    synchronize: process.env.NODE_ENV === 'development',
   }),
 );
