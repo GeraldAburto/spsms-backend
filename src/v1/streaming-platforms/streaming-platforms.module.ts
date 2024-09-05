@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { DatabaseModule } from '@/database/database.module';
 
 import CreateStreamingPlatformUseCase from '@/core/streaming-platforms/use-cases/create-streaming-platform.use-case';
+import UpdateStreamingPlatformUseCase from '@/core/streaming-platforms/use-cases/update-streaming-platform.use-case';
 import { StreamingPlatformRepository } from '@/database/streaming-platform.repository';
 import { UserRepository } from '@/database/user.repository';
 import { SharedModule } from '../shared/shared.module';
@@ -27,6 +28,19 @@ import { StreamingPlatformsController } from './streaming-platforms.controller';
         return new CreateStreamingPlatformUseCase(
           userRepository,
           uuidGeneratorService,
+          streamingPlatformRepository,
+        );
+      },
+    },
+    {
+      inject: [UserRepository, StreamingPlatformRepository],
+      provide: UpdateStreamingPlatformUseCase,
+      useFactory: (
+        userRepository: UserRepository,
+        streamingPlatformRepository: StreamingPlatformRepository,
+      ) => {
+        return new UpdateStreamingPlatformUseCase(
+          userRepository,
           streamingPlatformRepository,
         );
       },
