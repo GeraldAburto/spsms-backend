@@ -1,5 +1,4 @@
 import InvalidArgumentException from '@/core/shared/exceptions/invalid-argument.exception';
-
 import { StreamingPlatformCategory as StreamingPlatformCategoryEnum } from '../enums/streaming-platform-category.enum';
 import StreamingPlatformCategoryException from '../exceptions/streaming-platform-category.exception';
 
@@ -8,8 +7,18 @@ export default class StreamingPlatformCategory {
 
   private constructor(value: StreamingPlatformCategoryEnum) {
     this.mustBeDefined(value);
+    this.mustBeValidEnumValue(value);
     this.value = value;
   }
+
+  private static categoryMap: Record<string, StreamingPlatformCategoryEnum> = {
+    Business: StreamingPlatformCategoryEnum.Business,
+    Entertainment: StreamingPlatformCategoryEnum.Entertainment,
+    Personal: StreamingPlatformCategoryEnum.Personal,
+    Education: StreamingPlatformCategoryEnum.Education,
+    HealthAndFitness: StreamingPlatformCategoryEnum.HealthAndFitness,
+    NoCategory: StreamingPlatformCategoryEnum.NoCategory,
+  };
 
   private mustBeDefined(
     value: StreamingPlatformCategoryEnum | undefined | null,
@@ -19,20 +28,27 @@ export default class StreamingPlatformCategory {
     }
   }
 
+  private mustBeValidEnumValue(value: StreamingPlatformCategoryEnum) {
+    if (!Object.values(StreamingPlatformCategoryEnum).includes(value)) {
+      throw StreamingPlatformCategoryException.mustBeValid();
+    }
+  }
+
   static fromString(category: string) {
-    if (category === '') {
+    if (!category) {
       throw StreamingPlatformCategoryException.mustNotBeEmpty();
     }
 
-    const newCategory =
-      StreamingPlatformCategoryEnum[
-        category as keyof typeof StreamingPlatformCategoryEnum
-      ];
+    const newCategory = this.categoryMap[category];
 
-    if (newCategory === undefined) {
+    if (!newCategory) {
       throw StreamingPlatformCategoryException.mustBeValid();
     }
 
     return new this(newCategory);
+  }
+
+  static fromEnum(category: StreamingPlatformCategoryEnum) {
+    return new this(category);
   }
 }

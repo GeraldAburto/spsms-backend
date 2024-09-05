@@ -1,5 +1,4 @@
 import InvalidArgumentException from '@/core/shared/exceptions/invalid-argument.exception';
-
 import { StreamingPlatformBilling as StreamingPlatformBillingEnum } from '../enums/streaming-platform-billing.enum';
 import StreamingPlatformBillingException from '../exceptions/streaming-platform-billing.exception';
 
@@ -8,8 +7,16 @@ export default class StreamingPlatformBilling {
 
   private constructor(value: StreamingPlatformBillingEnum) {
     this.mustBeDefined(value);
+    this.mustBeValidEnumValue(value);
     this.value = value;
   }
+
+  private static billingMap: Record<string, StreamingPlatformBillingEnum> = {
+    Weekly: StreamingPlatformBillingEnum.Weekly,
+    Monthly: StreamingPlatformBillingEnum.Monthly,
+    Quarterly: StreamingPlatformBillingEnum.Quarterly,
+    Yearly: StreamingPlatformBillingEnum.Yearly,
+  };
 
   private mustBeDefined(
     value: StreamingPlatformBillingEnum | undefined | null,
@@ -19,20 +26,27 @@ export default class StreamingPlatformBilling {
     }
   }
 
-  static fromString(category: string) {
-    if (category === '') {
+  private mustBeValidEnumValue(value: StreamingPlatformBillingEnum) {
+    if (!Object.values(StreamingPlatformBillingEnum).includes(value)) {
+      throw StreamingPlatformBillingException.mustBeValid();
+    }
+  }
+
+  static fromString(billingType: string) {
+    if (!billingType) {
       throw StreamingPlatformBillingException.mustNotBeEmpty();
     }
 
-    const newCategory =
-      StreamingPlatformBillingEnum[
-        category as keyof typeof StreamingPlatformBillingEnum
-      ];
+    const newBillingType = this.billingMap[billingType];
 
-    if (newCategory === undefined) {
+    if (!newBillingType) {
       throw StreamingPlatformBillingException.mustBeValid();
     }
 
-    return new this(newCategory);
+    return new this(newBillingType);
+  }
+
+  static fromEnum(billingType: StreamingPlatformBillingEnum) {
+    return new this(billingType);
   }
 }
