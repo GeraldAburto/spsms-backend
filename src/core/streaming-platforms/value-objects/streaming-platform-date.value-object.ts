@@ -5,7 +5,6 @@ export default class StreamingPlatformDate extends ValueObject<Date> {
   private constructor(readonly value: Date) {
     super(value, 'Date');
 
-    console.log(typeof value);
     if (value.getTime() < new Date().getTime()) {
       throw StreamingPlatformDateException.mustBeIncomingDate();
     }

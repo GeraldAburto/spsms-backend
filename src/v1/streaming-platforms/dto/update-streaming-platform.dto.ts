@@ -5,6 +5,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   MaxLength,
   Min,
   MinDate,
@@ -13,51 +14,56 @@ import {
 import { StreamingPlatformBilling } from '@/enums/streaming-platform/streaming-platform-billing.enum';
 import { StreamingPlatformCategory } from '@/enums/streaming-platform/streaming-platform-category.enum';
 
-export class CreateStreamingPlatformDto {
+export class UpdateStreamingPlatformDto {
   @ApiProperty({
     type: String,
     example: 'Netflix',
     minLength: 1,
     maxLength: 50,
-    required: true,
+    required: false,
   })
   @IsNotEmpty()
   @MaxLength(50)
-  name: string;
+  @IsOptional()
+  name?: string;
 
   @ApiProperty({
     enum: StreamingPlatformCategory,
     example: StreamingPlatformCategory.Entertainment,
-    required: true,
+    required: false,
   })
   @IsEnum(StreamingPlatformCategory)
-  category: StreamingPlatformCategory;
+  @IsOptional()
+  category?: StreamingPlatformCategory;
 
   @ApiProperty({
     type: Number,
     example: 9.99,
-    required: true,
+    required: false,
     minimum: 1,
   })
   @IsNumber()
   @Min(1)
-  cost: number;
+  @IsOptional()
+  cost?: number;
 
   @ApiProperty({
     enum: StreamingPlatformBilling,
     example: StreamingPlatformBilling.Monthly,
-    required: true,
+    required: false,
   })
   @IsEnum(StreamingPlatformBilling)
-  billing: StreamingPlatformBilling;
+  @IsOptional()
+  billing?: StreamingPlatformBilling;
 
   @ApiProperty({
     type: Date,
     example: '2024/05/04',
-    required: true,
+    required: false,
   })
   @Type(() => Date)
   @IsDate()
   @MinDate(new Date())
-  date: Date;
+  @IsOptional()
+  date?: Date;
 }
