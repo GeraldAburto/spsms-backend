@@ -20,4 +20,11 @@ export default class UserId extends ValueObject<string> {
   public static fromString(id: string) {
     return new this(id);
   }
+
+  public equals(other: UserId): boolean {
+    if (!(other instanceof UserId)) {
+      return false;
+    }
+    return this.value === other.value;
+  }
 }

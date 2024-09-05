@@ -1,3 +1,4 @@
+import UserForbiddenActionException from '@/core/users/exceptions/user-forbidden-action.exception';
 import UserNotFoundException from '../../users/exceptions/user-not-found.exception';
 import { IUserRepository } from '../../users/user.repository';
 import UserId from '../../users/value-objects/user-id.value-object';
@@ -49,6 +50,10 @@ export default class UpdateStreamingPlatformUseCase {
 
     if (!streamingPlatform) {
       throw StreamingPlatformDateException.mustNotBeEarlierThanCurrentDate();
+    }
+
+    if (!UserId.fromString(streamingPlatform.userId).equals(userId)) {
+      throw new UserForbiddenActionException();
     }
 
     if (name) {

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  ForbiddenException,
   HttpCode,
   HttpStatus,
   InternalServerErrorException,
@@ -14,10 +15,11 @@ import {
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 
@@ -30,6 +32,8 @@ import StreamingPlatformIdException from '@/core/streaming-platforms/exceptions/
 import StreamingPlatformNameException from '@/core/streaming-platforms/exceptions/streaming-platform-name.exception';
 import CreateStreamingPlatformUseCase from '@/core/streaming-platforms/use-cases/create-streaming-platform.use-case';
 import UpdateStreamingPlatformUseCase from '@/core/streaming-platforms/use-cases/update-streaming-platform.use-case';
+import StreamingPlatformId from '@/core/streaming-platforms/value-objects/streaming-platform-id.value-object';
+import UserForbiddenActionException from '@/core/users/exceptions/user-forbidden-action.exception';
 import UserIdException from '@/core/users/exceptions/user-id.exception';
 import UserNotFoundException from '@/core/users/exceptions/user-not-found.exception';
 import UserId from '@/core/users/value-objects/user-id.value-object';
@@ -37,7 +41,6 @@ import { User } from '@/decorators/user.decorator';
 import { DomainStreamingPlatformBillingMapper } from '@/enums/streaming-platform/streaming-platform-billing.mapper';
 import { DomainStreamingPlatformCategoryMapper } from '@/enums/streaming-platform/streaming-platform-category.mapper';
 
-import StreamingPlatformId from '@/core/streaming-platforms/value-objects/streaming-platform-id.value-object';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateStreamingPlatformDto } from './dto/create-streaming-platform.dto';
 import { UpdateStreamingPlatformDto } from './dto/update-streaming-platform.dto';
@@ -111,15 +114,17 @@ export class StreamingPlatformsController {
 
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Update an existing streaming platform' })
-  @ApiResponse({
+  @ApiNoContentResponse({
     description: 'Streaming platform updated successfully',
-    status: HttpStatus.NO_CONTENT,
   })
   @ApiBadRequestResponse({
     description: 'There is an error in the request payload',
   })
   @ApiNotFoundResponse({
     description: 'User not found',
+  })
+  @ApiForbiddenResponse({
+    description: 'User cannot execute this action',
   })
   @ApiInternalServerErrorResponse({ description: 'Something went wrong' })
   @Put(':id')
@@ -163,6 +168,10 @@ export class StreamingPlatformsController {
 
       if (error instanceof UserNotFoundException) {
         throw new NotFoundException(error.message);
+      }
+
+      if (error instanceof UserForbiddenActionException) {
+        throw new ForbiddenException(error.message);
       }
 
       throw new InternalServerErrorException(error.message);
